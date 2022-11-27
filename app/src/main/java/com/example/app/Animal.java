@@ -13,15 +13,18 @@ public abstract class Animal {
         mAge = 0;
     }
 
+    // 子类禁止重写
     public final void setName(String name) {
         Log.i(TAG, "setName");
         mName = name;
     }
 
-    public void setAge(int age) {
+    // 子类禁止重写
+    public final void setAge(int age) {
         Log.i(TAG, "setName");
         mAge = age;
     }
 
+    // 虚函数接口
     public abstract String getInfo();
 }

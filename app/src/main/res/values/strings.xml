@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">app</string>
+    <string name="app_name">安卓开发测试按钮</string>
+    <string name="btnTest1">按钮1</string>
+    <string name="btnTest2">按钮2</string>
 </resources>
