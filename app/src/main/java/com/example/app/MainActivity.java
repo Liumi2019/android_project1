@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button btnTest1 = (Button) findViewById(R.id.btn_test1);
+        Button btnTest1 = findViewById(R.id.btn_test1);
         btnTest1.setOnClickListener(this);
-        Button btnTest2 = (Button) findViewById(R.id.btn_test2);
+        Button btnTest2 = findViewById(R.id.btn_test2);
         btnTest2.setOnClickListener(this);
     }
 
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void testNative () {
+    private void testNative() {
         testSort();
     }
     
@@ -50,8 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         UseSort useSort = new UseSort();
         useSort.testSort();
     }
-    
-    
+
     private void testDog() {
         Dog dog = new Dog();
         dog.setAge(18);
