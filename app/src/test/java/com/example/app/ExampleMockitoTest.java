@@ -1,7 +1,6 @@
 package com.example.app;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 import android.content.Context;
@@ -12,16 +11,20 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ExampleMockkTest {
-    private static final String FAKE_STRING = "testMock";
+public class ExampleMockitoTest {
+    private static final String mockTestName = "testMock";
+
+    private static class ContextMockReturn {
+       public static final String mockTestName = "testMock";
+    }
 
     @Mock
     Context context;
 
     @Test
     public void runMockContextTest() {
-        when(context.getString(R.string.mockTestName)).thenReturn(FAKE_STRING);
-        assertThat(context.getString(R.string.mockTestName), is(FAKE_STRING));
+        when(context.getString(R.string.mockTestName)).thenReturn(ContextMockReturn.mockTestName);
+        assertEquals(mockTestName, context.getString(R.string.mockTestName));
 
         when(context.getPackageName()).thenReturn("testMock");
         System.out.println(context.getPackageName());

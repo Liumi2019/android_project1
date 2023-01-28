@@ -19,7 +19,7 @@ include_directories(include)
 
 file(GLOB_RECURSE SRC
         src/*.cpp
-        jni/*.cpp
+        src/jni/*.cpp
         )
 
 add_library( # Sets the name of the library.
