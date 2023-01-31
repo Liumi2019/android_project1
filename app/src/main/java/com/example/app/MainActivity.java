@@ -8,12 +8,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-// AppCompatActivity 与 Activity 界面不一致
-// AppCompatActivity 中含有 ActionBar
-// View.OnClickListener() interface 接口实现 button 类对象调用 onClick(View view)
-
+/**
+ * AppCompatActivity 与 Activity 界面不一致
+ *  AppCompatActivity 中含有 ActionBar
+ * View.OnClickListener() interface 接口实现 button 类对象调用 onClick(View view)
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-
     static {
         System.loadLibrary("app");
     }
@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Button btnTest1 = findViewById(R.id.btn_test1);
         btnTest1.setOnClickListener(this);
+
         Button btnTest2 = findViewById(R.id.btn_test2);
         btnTest2.setOnClickListener(this);
     }
@@ -60,10 +61,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void addAge(Dog dog) {
-        dog.mAge += 3;
+        dog.setAge(dog.getAge() + 3);
     }
 
     // Native
     private native String get();
-
 }
