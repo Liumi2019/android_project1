@@ -1,10 +1,48 @@
 package com.example.app;
 
+import static org.hamcrest.MatcherAssert.*;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertEquals;
 
+import android.util.Log;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 public class DogTest {
+    private static final String TAG = Dog.class.getSimpleName();
+
+    private Dog mDog;
+
+    // 只执行一次 必须是 "public static void" 修饰
+    @BeforeClass
+    public static void init() {
+        Log.i(TAG, "stat running all test");
+    }
+
+    // 每个测试执行前都执行一次
+    @Before
+    private void createDog() {
+        Log.i(TAG, "current test start");
+        mDog = new Dog("Create");
+    }
+
+    // 每个测试执行完执行一次
+    @After
+    private void doNothing() {
+        Log.i(TAG, "current test end");
+    }
+
+    // 只执行一次
+    @AfterClass
+    public static void deinit() {
+        Log.i(TAG, "end all test");
+    }
+
     @Test
     public void ConstructorTest() {
         Dog dog = new Dog();
@@ -16,9 +54,11 @@ public class DogTest {
         assertEquals(dog.getAge(), 0);
     }
 
+    // 暂不执行 @Ignore("TODO")
     @Test
     public void getInfoTest() {
         Dog dog = new Dog("123");
+        // 断言 简单方便的判断
         assertEquals(dog.getInfo(), "Name:123; age:0");
     }
 
@@ -27,6 +67,22 @@ public class DogTest {
         Dog dog = new Dog("123");
         assertEquals(dog.testThread(), 0);
     }
+
+    // 断言高阶匹配 使用匹配符not, is, allOf, lessThan ...
+    @Test
+    public void testDogName() {
+         assertThat(mDog.getInfo(), not("Name:123; age:1"));
+    }
+
+    // 测试方法执行顺序不定 可以使用 @FixMethodOrder 固定顺序
+
+    // 测试高阶知识
+    // @RunWith(JUnit4.class), SpringJUnit4ClassRunner.class, 使用那个运行器执行
+    // suite 测试套件内的测试样例一起执行，包括顺序，且可以嵌套
+    // @RunWith(Suite.class) + @Suite.SuiteClasses({TestFeatureLogin.class,TestFeatureLogout.class})
+    // 测试参数配置 Parameterized
+    // Categories 可分类执行测试代码
+
 }
 
 //@RunWith(MockitoJUnitRunner.class)
