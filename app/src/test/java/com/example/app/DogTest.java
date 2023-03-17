@@ -4,43 +4,38 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertEquals;
 
-import android.util.Log;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 public class DogTest {
-    private static final String TAG = Dog.class.getSimpleName();
-
     private Dog mDog;
 
     // 只执行一次 必须是 "public static void" 修饰
     @BeforeClass
     public static void init() {
-        Log.i(TAG, "stat running all test");
+        System.out.println("stat running all test");
     }
 
     // 每个测试执行前都执行一次
     @Before
-    private void createDog() {
-        Log.i(TAG, "current test start");
+    public void createDog() {
+        System.out.println("current test start");
         mDog = new Dog("Create");
     }
 
     // 每个测试执行完执行一次
     @After
-    private void doNothing() {
-        Log.i(TAG, "current test end");
+    public void doNothing() {
+        System.out.println("current test end");
     }
 
     // 只执行一次
     @AfterClass
     public static void deinit() {
-        Log.i(TAG, "end all test");
+        System.out.println("end all test");
     }
 
     @Test

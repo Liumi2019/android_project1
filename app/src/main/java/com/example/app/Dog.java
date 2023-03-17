@@ -4,7 +4,6 @@ import android.util.Log;
 
 /**
  * 动物 dog 继承 Animal
- *
  */
 public class Dog extends Animal {
     static private final String TAG = Dog.class.getSimpleName();
@@ -22,9 +21,9 @@ public class Dog extends Animal {
         return "Name:" + this.getName() + "; age:" + this.getAge();
     }
 
-    /** 静态内部类
+    /**
+     * 静态内部类
      * 多线程入口接口 Runnable 实现 线程入口函数
-     *
      */
     private static class RunnableDome implements Runnable {
         public void run() {
