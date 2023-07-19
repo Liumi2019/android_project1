@@ -57,13 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 testNative();
                 break;
             case R.id.btn_gl_test:
-                Intent intent = getIntent();
-                int type = intent.getIntExtra(FirstOpenGl.TYPE_NAME, FirstOpenGl.TYPE_JAVA);
-                Log.i(TAG, "type: " + type);
-                firstOpenGl = new FirstOpenGl(this, type);
-                glSurfaceView = firstOpenGl.getGlSurfaceView();
-                setContentView(glSurfaceView);
-                Toast.makeText(this, firstOpenGl.getGlInfo(), Toast.LENGTH_SHORT).show();
+                testOpenGl();
                 break;
             default:
                 Log.e(TAG, "onClick error!");
@@ -97,12 +91,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         useSort.testSort();
     }
 
+    private void testOpenGl() {
+        Intent intent = getIntent();
+        int type = intent.getIntExtra(FirstOpenGl.TYPE_NAME, FirstOpenGl.TYPE_JAVA);
+        Log.i(TAG, "type: " + type);
+        firstOpenGl = new FirstOpenGl(this, type);
+        glSurfaceView = firstOpenGl.getGlSurfaceView();
+        setContentView(glSurfaceView);
+        Toast.makeText(this, firstOpenGl.getGlInfo(), Toast.LENGTH_SHORT).show();
+    }
+
     private void testDog() {
         Dog dog = new Dog();
         dog.setAge(18);
         addAge(dog);
-        Toast toast = Toast.makeText(this, dog.getInfo(), Toast.LENGTH_SHORT);
-        toast.show();
+        Toast.makeText(this, dog.getInfo(), Toast.LENGTH_SHORT).show();
     }
 
     private void addAge(Dog dog) {

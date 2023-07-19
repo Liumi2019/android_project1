@@ -34,9 +34,21 @@ public class FirstOpenGl {
 
     public static final int TYPE_JAVA = 1;
 
+    private static final int MIN_VERTEX_COUNt = 6;
+
+    private static final int FLOAT_BIT = 4;
+
+    private static int vertexCount = 2;
+
+    private static int strideSize = 8; // vertexCount * FLOAT_BIT
+
+    private static float[] position = null;
+
     private final int type;
 
     private GLSurfaceView glSurfaceView;
+
+    private GLSurfaceView.Renderer renderer = null;
 
     private final Context context;
 
@@ -82,24 +94,46 @@ public class FirstOpenGl {
     private void initGlSurfaceView() {
         glSurfaceView = new GLSurfaceView(context);
         glSurfaceView.setEGLContextClientVersion(3);
-        glSurfaceView.setRenderer(getRenderer());
+
+        initRenderer();
+        if (renderer == null) {
+            Log.e(TAG, "renderer is null");
+            return;
+        }
+        glSurfaceView.setRenderer(renderer);
         glSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }
 
     /**
      * 创建渲染方式
-     *
-     * @return 返回 Java 或 Native 渲染实例
      */
-    private GLSurfaceView.Renderer getRenderer() {
+    private void initRenderer() {
         Log.i(TAG, "getRenderer()");
-        GLSurfaceView.Renderer renderer;
         if (type == TYPE_JAVA) {
             renderer = new JavaRenderer(context);
-        } else {
-            renderer = null;
         }
-        return renderer;
+    }
+
+    /**
+     * 设置位置信息
+     *
+     * @param position_    位置信息
+     * @param vertexCount_ 每个顶点数据个数
+     * @return true 设置成功，false 设置失败，采用默认值
+     */
+    public boolean setPosition(float[] position_, int vertexCount_) {
+        if (position == null || position.length < MIN_VERTEX_COUNt || vertexCount == 0) {
+            Log.e(TAG, "set position error!");
+            return false;
+        }
+        if (position.length / vertexCount < 3) {
+            Log.e(TAG, "at least 3 points!");
+            return false;
+        }
+        position = position_;
+        vertexCount = vertexCount_;
+        strideSize = vertexCount * FLOAT_BIT;
+        return true;
     }
 
     /**
@@ -110,19 +144,9 @@ public class FirstOpenGl {
     private static class JavaRenderer implements GLSurfaceView.Renderer {
         private final Context context;
 
-        private static final int MIN_VERTEX_COUNt = 6;
-
-        private static final int FLOAT_BIT = 4;
-
-        private  int vertexCount = 2;
-
-        private int strideSize = 8; // vertexCount * FLOAT_BIT
-
         private String vertexSource = "";
 
         private String fragmentSource = "";
-
-        private float[] position = null;
 
         private int program = 0;
 
@@ -130,21 +154,6 @@ public class FirstOpenGl {
 
         public JavaRenderer(@NonNull Context context) {
             this.context = context;
-        }
-
-        public boolean setPosition(float[] position, int vertexCount) {
-            if (position == null || position.length < MIN_VERTEX_COUNt || vertexCount == 0) {
-                Log.e(TAG, "set position error!");
-                return false;
-            }
-            if (position.length / vertexCount < 3) {
-                Log.e(TAG, "at least 3 points!");
-                return false;
-            }
-            this.position = position;
-            this.vertexCount = vertexCount;
-            strideSize = vertexCount * FLOAT_BIT;
-            return true;
         }
 
         private void getPosition() {
@@ -201,7 +210,7 @@ public class FirstOpenGl {
          * @param gl     the GL interface. Use <code>instanceof</code> to
          *               test if the interface supports GL11 or higher interfaces.
          * @param config the EGLConfig of the created surface. Can be used
-         *               to create matching pbuffers.
+         *               to create matching buffers.
          */
         @Override
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
