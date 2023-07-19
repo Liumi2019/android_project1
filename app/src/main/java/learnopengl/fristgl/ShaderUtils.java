@@ -56,6 +56,7 @@ public class ShaderUtils {
         GLES30.glDeleteShader(vertexShader);
         GLES30.glDeleteShader(fragmentShader);
         GLES30.glLinkProgram(program);
+
         int[] linkStatus = new int[1];
         GLES30.glGetProgramiv(program, GLES30.GL_LINK_STATUS, linkStatus, 0);
         if (linkStatus[0] == 0) {
