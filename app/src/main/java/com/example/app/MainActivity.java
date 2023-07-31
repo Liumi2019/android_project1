@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import learnopengl.fristgl.FirstOpenGl;
+import learnserver.useaar.UserAARServer;
 import use.refrence.demo.demo1;
 
 /**
@@ -45,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Button btnTest3 = findViewById(R.id.btn_gl_test);
         btnTest3.setOnClickListener(this);
+
+        Button btnAarService = findViewById(R.id.btn_aar_service);
+        btnAarService.setOnClickListener(this);
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -58,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_gl_test:
                 testOpenGl();
+                break;
+            case R.id.btn_aar_service:
+                UserAARServer userAARServer = new UserAARServer();
+                userAARServer.testAarService(getApplicationContext());
                 break;
             default:
                 Log.e(TAG, "onClick error!");
