@@ -22,14 +22,14 @@ public class Client {
 
     private IMyAidlInterface binderSer;
 
-    private Context context;
+    private final Context context;
 
 
     public Client(Context context) {
         this.context = context;
     }
 
-    private ServiceConnection serviceConnection = new ServiceConnection() {
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             binderSer = IMyAidlInterface.Stub.asInterface(service);
@@ -56,7 +56,7 @@ public class Client {
         }
     };
 
-    private MyCallBack callBack = new MyCallBack.Stub() {
+    private final MyCallBack callBack = new MyCallBack.Stub() {
         @Override
         public int getNum(int time) throws RemoteException {
             Log.i(TAG, "get time=" + time + "from service!!!");

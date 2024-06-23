@@ -16,7 +16,7 @@ public class FristLib extends Service {
 
     private RemoteCallbackList<MyCallBack> callBacks = null;
 
-    private Thread thread = new Thread(()->{
+    private final Thread thread = new Thread(()->{
         for (int i = 0; i < 100; i++) {
             updateCallback(i);
             Log.i(TAG, "time:" + i * 100);

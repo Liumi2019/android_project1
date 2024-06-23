@@ -1,7 +1,5 @@
 package use.refrence.demo;
 
-import java.lang.ref.Reference;
-
 /**
  * 测试引用
  */

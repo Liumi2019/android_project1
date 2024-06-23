@@ -1,15 +1,12 @@
 package use.refrence.demo;
 
-import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
-
 /**
  * 测试引用
  */
 public class demo1 {
-    private int[] updateA;
+    private final int[] updateA;
 
-    private demo1_in demo1_in1;
+    private final demo1_in demo1_in1;
 
     public demo1() {
         updateA = new int[1];

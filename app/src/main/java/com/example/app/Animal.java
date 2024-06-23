@@ -20,7 +20,7 @@ public abstract class Animal {
     }
 
     /**
-     * @param name
+     * @param name name
      */
     public Animal(String name) {
         mName = name;
