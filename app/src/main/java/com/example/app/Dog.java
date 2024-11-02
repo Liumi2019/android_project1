@@ -16,6 +16,7 @@ public class Dog extends Animal {
         super(name);
     }
 
+    @Override
     public String getInfo() {
         Log.i(TAG, "getInfo");
         return "Name:" + this.getName() + "; age:" + this.getAge();

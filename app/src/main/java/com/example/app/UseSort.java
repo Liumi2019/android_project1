@@ -8,6 +8,9 @@ import java.util.Arrays;
 
 public class UseSort {
 
+    /**
+     * 使用实现 Comparable<Human> 接口实现在大多数情况不合适，使用Lambda表达式更合适
+     */
     private class Human implements Comparable<Human> {
         private final String name;
         private final int age;
