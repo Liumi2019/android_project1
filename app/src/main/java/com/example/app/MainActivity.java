@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import javalearn.thread.ThreadMaker;
 import learnopengl.fristgl.FirstOpenGl;
 import learnserver.useaar.UserAARServer;
 import use.refrence.demo.demo1;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_test1:
-                Toast.makeText(this, get(), Toast.LENGTH_SHORT).show();
+                btn1Fun();
                 break;
             case R.id.btn_test2:
                 testNative();
@@ -118,6 +119,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void addAge(Dog dog) {
         dog.setAge(dog.getAge() + 3);
+    }
+
+    private boolean TestThread = true;
+    private void btn1Fun() {
+        if (TestThread) {
+            ThreadMaker threadMaker = new ThreadMaker();
+            for (int i = 1; i < 4; i++) {
+                threadMaker.runThread(i);
+            }
+            return;
+        }
+        runOnUiThread(()->Toast.makeText(this, get(), Toast.LENGTH_SHORT).show());
     }
 
     // Native
