@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import javalearn.thread.ThreadMaker;
+import javalearn.thread.ThreadProcessor;
 import learnopengl.fristgl.FirstOpenGl;
 import learnserver.useaar.UserAARServer;
 import use.refrence.demo.demo1;
@@ -124,9 +124,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean TestThread = true;
     private void btn1Fun() {
         if (TestThread) {
-            ThreadMaker threadMaker = new ThreadMaker();
+            ThreadProcessor threadProcessor = new ThreadProcessor();
             for (int i = 1; i < 4; i++) {
-                threadMaker.runThread(i);
+                threadProcessor.runThread(i);
             }
             return;
         }

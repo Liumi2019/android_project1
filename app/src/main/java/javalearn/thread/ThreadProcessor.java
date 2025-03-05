@@ -5,11 +5,13 @@ import android.util.Log;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
+import javalearn.thread.utils.ThreadUtils;
+
 /**
  * 学习创建线程的方法
  */
-public class ThreadMaker {
-    private static final String TAG = ThreadMaker.class.getSimpleName();
+public class ThreadProcessor {
+    private static final String TAG = ThreadProcessor.class.getSimpleName();
 
     public static final int new_thread_runnable = 1;
 
@@ -21,11 +23,12 @@ public class ThreadMaker {
 
     Thread mThread = null;
 
-    public ThreadMaker() {
+    public ThreadProcessor() {
     }
 
     public void runThread(int type) {
         Log.i(TAG, "type: " + type);
+        mCreateType = type;
 
         if (type == new_thread_callable) {
             FutureTask<Long> oneTask = new FutureTask<Long>(new CallableThread(900L));
@@ -41,22 +44,25 @@ public class ThreadMaker {
             return;
         }
 
-        mCreateType = type;
         createThread();
         if (mThread == null) {
             Log.w(TAG, "please create thread first...");
             return;
         }
         mThread.start();
+
+        try {
+            mThread.join();
+        } catch (InterruptedException e) {
+            Log.w(TAG, "thread join interrupted exception :" + e);
+        }
     }
 
     private void createThread() {
         if (mCreateType == new_thread_runnable) {
-            mThread = new Thread(new RunnableTread(500L));
-            mThread.setName("runnable");
+            mThread = ThreadUtils.createThread("runnable", new RunnableTread(700L));
         } else if (mCreateType == new_thread_thread) {
-            mThread = new ThreadThread(800L);
-            mThread.setName("thread");
+            mThread = ThreadThread.createThread("threadThread", 800L);
         }
     }
 }

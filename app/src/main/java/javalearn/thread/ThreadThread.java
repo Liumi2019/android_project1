@@ -2,13 +2,24 @@ package javalearn.thread;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 public class ThreadThread extends Thread {
     private static final String TAG = ThreadThread.class.getSimpleName();
 
     private final long mSleepTime;
 
-    public ThreadThread(long sleepTime) {
+    private final String mThreadName;
+
+    public ThreadThread(@NonNull String threadName, long sleepTime) {
         mSleepTime = sleepTime;
+        mThreadName = threadName;
+    }
+
+    public ThreadThread(@NonNull String threadName) {
+        mSleepTime = 0;
+        mThreadName = threadName;
+
     }
 
     @Override
@@ -24,5 +35,9 @@ public class ThreadThread extends Thread {
             Log.w(TAG, "sleep exception thread name: " + Thread.currentThread().getName());
         }
         Log.w(TAG, "sleep " + mSleepTime + "ms");
+    }
+
+    public static Thread createThread(@NonNull String threadName, long sleepTime) {
+        return new ThreadThread(threadName, sleepTime);
     }
 }
