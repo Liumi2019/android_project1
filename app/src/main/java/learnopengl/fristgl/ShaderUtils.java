@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * 加载着色器程序工具
+ */
 public class ShaderUtils {
     private static final String TAG = ShaderUtils.class.getSimpleName();
 
@@ -20,6 +23,7 @@ public class ShaderUtils {
         Log.i(TAG, "shader: " + shader);
         GLES30.glShaderSource(shader, source);
         GLES30.glCompileShader(shader);
+
         int[] compiled = new int[1];
         GLES30.glGetShaderiv(shader, GLES30.GL_COMPILE_STATUS, compiled, 0);
         if (compiled[0] == 0) {
@@ -84,5 +88,9 @@ public class ShaderUtils {
             throw new RuntimeException(e);
         }
         return result;
+    }
+
+    public static void deleteProgram(int program) {
+        GLES30.glDeleteProgram(program);
     }
 }

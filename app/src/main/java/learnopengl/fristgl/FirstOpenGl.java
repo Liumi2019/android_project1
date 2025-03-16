@@ -38,11 +38,19 @@ public class FirstOpenGl {
 
     private static final int FLOAT_BIT = 4;
 
+    // 顶点总数
     private static int vertexCount = 2;
 
-    private static int strideSize = 8; // vertexCount * FLOAT_BIT
+    // 每个顶点的数据数目
+    private static int countPerVertex = 3;
+
+    // 步长，如数组索引[0~2，3~7]为位置数据，4、5为其他数据，
+    // 则步长为3（位置） + 1（其他）： 4 * 类型数
+    private static int strideSize = 4 * FLOAT_BIT; // vertexCount * FLOAT_BIT
 
     private static float[] position = null;
+
+    private static float[] color = null;
 
     private final int type;
 
@@ -150,21 +158,48 @@ public class FirstOpenGl {
 
         private int program = 0;
 
+        /**
+         * 顶点对象句柄，用户处理顶点着色器程序的顶点数据
+         */
         private int vertexHandle = 0;
+
+        private int pointSizeHandle = 0;
+
+        /**
+         * 片段着色器对象句柄，用户处理片段着色器程序
+         */
+        private int fragmentHandle = 0;
 
         public JavaRenderer(@NonNull Context context) {
             this.context = context;
         }
 
         private void getPosition() {
-            if (position == null || position.length < MIN_VERTEX_COUNt) {
-                position = new float[]{
-                        0.0f, 0.5f, 0f,
-                        -0.5f, -0.5f, 0f,
-                        0.5f, -0.5f, 0f
-                };
-                vertexCount = 3;
-                strideSize = vertexCount * FLOAT_BIT;
+            // 位置数组
+            position = new float[]{
+                // 位置 * 3----, // 其他数据 * 1
+                0.0f, 0.5f, 0f, 10.0f,
+                -0.5f, -0.5f, 0f, 10.0f,
+                0.5f, -0.5f, 0f, 20.0f,
+                0.0f, -1.0f, 0f, 20.0f
+            };
+
+            // 每个顶点的数据数目
+            countPerVertex = 3;
+
+            // 顶点总数
+            vertexCount = 4;
+
+            // 计算每个顶点的步长，如数组索引[0~2，3~7]为位置数据，4、5为其他数据，
+            // 则步长为3（位置） + 1（其他） 4 * 类型数
+            int otherDataCount = 1;
+            strideSize = (countPerVertex + otherDataCount) * FLOAT_BIT;
+        }
+
+        private void getColor() {
+            // color rgba 四维向量
+            if (color == null || color.length < MIN_VERTEX_COUNt) {
+                color = new float[]{0.0f, 1.0f, 1.0f, 1.0f};
             }
         }
 
@@ -185,14 +220,28 @@ public class FirstOpenGl {
                 program = 0;
                 Log.e(TAG, "program is 0");
             }
-
         }
 
         private void initPositionHandle() {
+            // 获取 gl 程序中的顶点对象句柄，使用 glVertexAttribPointer() 拷贝数据到 GL 着色器程序中
             vertexHandle = GLES30.glGetAttribLocation(program, "vPosition");
             Log.i(TAG, "vertexHandle: " + vertexHandle);
+            pointSizeHandle = GLES30.glGetAttribLocation(program, "PointSize");
+            Log.i(TAG, "vertexHandle: " + pointSizeHandle);
         }
 
+        private void initColorHandle() {
+            // 获取 gl 程序中的顶点对象句柄，使用 glVertexAttribPointer() 拷贝数据到 GL 着色器程序中
+            fragmentHandle = GLES30.glGetUniformLocation(program, "Scolor");
+            Log.i(TAG, "fragmentHandle: " + fragmentHandle);
+        }
+
+        /**
+         * 将顶点数据（float 数组），转为 FloatBuffer，拷贝到顶点着色器程序中
+         * java 运行于虚拟机中，需要转为 native 内存才能拷贝到着色器程序中
+         *
+         * @return FloatBuffer
+         */
         private FloatBuffer getVertexBuffer() {
             // 获取顶点字节数
             final int bufferSize = position.length * FLOAT_BIT;
@@ -203,6 +252,18 @@ public class FirstOpenGl {
             vertexBuffer.position(0);
             return vertexBuffer;
         }
+
+        private FloatBuffer getFragmentBuffer() {
+            // 获取顶点字节数
+            final int bufferSize = color.length * FLOAT_BIT;
+            ByteBuffer vbb = ByteBuffer.allocateDirect(bufferSize);
+            vbb.order(ByteOrder.nativeOrder());
+            FloatBuffer vertexBuffer = vbb.asFloatBuffer();
+            vertexBuffer.put(color);
+            vertexBuffer.position(0);
+            return vertexBuffer;
+        }
+
 
         /**
          * Renderer 回调函数 onSurfaceCreated()
@@ -216,12 +277,17 @@ public class FirstOpenGl {
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             Log.i(TAG, "onSurfaceCreated()");
 
+            // 创建 gl程序对像
             createProgram();
+
             initPositionHandle();
+            initColorHandle();
+
             getPosition();
+            getColor();
 
             // 使用黑色背景填充，刷新界面
-            GLES30.glClearColor(0, 0, 0, 1);
+            GLES30.glClearColor(0.5f, 0.0f, 0.0f, 1.0f);
         }
 
         /**
@@ -247,15 +313,26 @@ public class FirstOpenGl {
         public void onDrawFrame(GL10 gl) {
             Log.i(TAG, "onDrawFrame()");
 
-            GLES30.glVertexAttribPointer(vertexHandle, vertexCount, GLES30.GL_FLOAT, false, strideSize, getVertexBuffer());
+            FloatBuffer vertexBuffer = getVertexBuffer();
+            GLES30.glVertexAttribPointer(vertexHandle, countPerVertex, GLES30.GL_FLOAT, false, strideSize, vertexBuffer);
             GLES30.glEnableVertexAttribArray(vertexHandle);
 
-            // 清空界面
+            vertexBuffer.position(3);
+            GLES30.glVertexAttribPointer(pointSizeHandle, 1, GLES30.GL_FLOAT, false, strideSize, vertexBuffer);
+            GLES30.glEnableVertexAttribArray(pointSizeHandle);
+
+            // GL 设置颜色
+            GLES30.glUniform4fv(fragmentHandle, 1, getFragmentBuffer());
+
             GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
+
             // 使用程序
             GLES30.glUseProgram(program);
             // 绘制新图像
-            GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vertexCount);
+            // GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vertexCount);
+
+            // 绘制点
+            GLES30.glDrawArrays(GLES30.GL_POINTS, 0, vertexCount);
         }
     }
 }
