@@ -34,19 +34,15 @@ public class FirstOpenGl {
 
     public static final int TYPE_JAVA = 1;
 
-    private static final int MIN_VERTEX_COUNt = 6;
+    private static final int MIN_VERTEX_COUNT = 6;
 
     private static final int FLOAT_BIT = 4;
 
-    // 顶点总数
     private static int vertexCount = 2;
 
-    // 每个顶点的数据数目
     private static int countPerVertex = 3;
 
-    // 步长，如数组索引[0~2，3~7]为位置数据，4、5为其他数据，
-    // 则步长为3（位置） + 1（其他）： 4 * 类型数
-    private static int strideSize = 4 * FLOAT_BIT; // vertexCount * FLOAT_BIT
+    private static int strideSize = 4 * FLOAT_BIT;
 
     private static float[] position = null;
 
@@ -83,10 +79,14 @@ public class FirstOpenGl {
     private int getGlVersion() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             ActivityManager activityManager = context.getSystemService(ActivityManager.class);
+            if (activityManager == null) {
+                Log.e(TAG, "getGlVersion: ActivityManager is null");
+                return -1;
+            }
             ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
             return configurationInfo.reqGlEsVersion;
         }
-        Log.e(TAG, "getGlVersion error");
+        Log.e(TAG, "getGlVersion error: SDK version below M");
         return -1;
     }
 
@@ -130,17 +130,17 @@ public class FirstOpenGl {
      * @return true 设置成功，false 设置失败，采用默认值
      */
     public boolean setPosition(float[] position_, int vertexCount_) {
-        if (position == null || position.length < MIN_VERTEX_COUNt || vertexCount == 0) {
+        if (position_ == null || position_.length < MIN_VERTEX_COUNT || vertexCount_ == 0) {
             Log.e(TAG, "set position error!");
             return false;
         }
-        if (position.length / vertexCount < 3) {
+        if (position_.length / vertexCount_ < 3) {
             Log.e(TAG, "at least 3 points!");
             return false;
         }
         position = position_;
         vertexCount = vertexCount_;
-        strideSize = vertexCount * FLOAT_BIT;
+        strideSize = vertexCount_ * FLOAT_BIT;
         return true;
     }
 
@@ -198,7 +198,7 @@ public class FirstOpenGl {
 
         private void getColor() {
             // color rgba 四维向量
-            if (color == null || color.length < MIN_VERTEX_COUNt) {
+            if (color == null || color.length < MIN_VERTEX_COUNT) {
                 color = new float[]{0.0f, 1.0f, 1.0f, 1.0f};
             }
         }
@@ -212,7 +212,7 @@ public class FirstOpenGl {
             try {
                 fragmentSource = ShaderUtils.loadFromAsserts("fragment.fsh", context.getResources());
             } catch (RuntimeException ignore) {
-                Log.e(TAG, "load vertexSource error!");
+                Log.e(TAG, "load fragmentSource error!");
             }
             if (!TextUtils.isEmpty(vertexSource) && !TextUtils.isEmpty(fragmentSource)) {
                 program = ShaderUtils.createProgram(vertexSource, fragmentSource);
@@ -227,7 +227,7 @@ public class FirstOpenGl {
             vertexHandle = GLES30.glGetAttribLocation(program, "vPosition");
             Log.i(TAG, "vertexHandle: " + vertexHandle);
             pointSizeHandle = GLES30.glGetAttribLocation(program, "PointSize");
-            Log.i(TAG, "vertexHandle: " + pointSizeHandle);
+            Log.i(TAG, "pointSizeHandle: " + pointSizeHandle);
         }
 
         private void initColorHandle() {

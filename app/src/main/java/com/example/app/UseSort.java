@@ -8,13 +8,14 @@ import java.util.Arrays;
 
 public class UseSort {
 
+    private static final String TAG = UseSort.class.getSimpleName();
+
     /**
      * 使用实现 Comparable<Human> 接口实现在大多数情况不合适，使用Lambda表达式更合适
      */
     private class Human implements Comparable<Human> {
         private final String name;
         private final int age;
-        private final String TAG = Human.class.getSimpleName();
 
         Human(@NonNull String name, int age) {
             this.name = name;
@@ -35,8 +36,8 @@ public class UseSort {
         }
 
         @Override
-        public int compareTo(Human human) {
-            return this.age - human.age;
+        public int compareTo(@NonNull Human human) {
+            return Integer.compare(this.age, human.age);
         }
     } // Class Human
 

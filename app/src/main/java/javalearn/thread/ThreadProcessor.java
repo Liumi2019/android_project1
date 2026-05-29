@@ -21,7 +21,7 @@ public class ThreadProcessor {
 
     private int mCreateType = new_thread_runnable;
 
-    Thread mThread = null;
+    private Thread mThread = null;
 
     public ThreadProcessor() {
     }
@@ -36,11 +36,18 @@ public class ThreadProcessor {
             mThread.setName("callable");
             mThread.start();
             try {
-                // 调用 Future 的 get() 方法阻塞获取结果，同时记得捕获异常
                 long result = oneTask.get();
             } catch (RuntimeException | ExecutionException | InterruptedException e) {
-                Log.w(TAG, "Exception");
+                Log.w(TAG, "callable thread exception: " + e.getMessage());
+                if (e instanceof InterruptedException) {
+                    Thread.currentThread().interrupt();
+                }
             }
+            return;
+        }
+
+        if (type < new_thread_runnable || type > new_thread_thread) {
+            Log.w(TAG, "invalid thread type: " + type);
             return;
         }
 
@@ -54,7 +61,8 @@ public class ThreadProcessor {
         try {
             mThread.join();
         } catch (InterruptedException e) {
-            Log.w(TAG, "thread join interrupted exception :" + e);
+            Log.w(TAG, "thread join interrupted: " + e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 

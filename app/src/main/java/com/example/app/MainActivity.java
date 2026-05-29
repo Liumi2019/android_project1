@@ -40,16 +40,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         Button btnTest1 = findViewById(R.id.btn_test1);
-        btnTest1.setOnClickListener(this);
+        if (btnTest1 != null) {
+            btnTest1.setOnClickListener(this);
+        }
 
         Button btnTest2 = findViewById(R.id.btn_test2);
-        btnTest2.setOnClickListener(this);
+        if (btnTest2 != null) {
+            btnTest2.setOnClickListener(this);
+        }
 
         Button btnTest3 = findViewById(R.id.btn_gl_test);
-        btnTest3.setOnClickListener(this);
+        if (btnTest3 != null) {
+            btnTest3.setOnClickListener(this);
+        }
 
         Button btnAarService = findViewById(R.id.btn_aar_service);
-        btnAarService.setOnClickListener(this);
+        if (btnAarService != null) {
+            btnAarService.setOnClickListener(this);
+        }
+
+        Button btnOpenGlActivity = findViewById(R.id.btn_opengl_activity);
+        if (btnOpenGlActivity != null) {
+            btnOpenGlActivity.setOnClickListener(this);
+        }
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -63,6 +76,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_gl_test:
                 testOpenGl();
+                break;
+            case R.id.btn_opengl_activity:
+                startOpenGlActivity();
                 break;
             case R.id.btn_aar_service:
                 UserAARServer userAARServer = new UserAARServer();
@@ -87,6 +103,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             glSurfaceView.onResume();
         }
         super.onResume();
+    }
+
+    private void startOpenGlActivity() {
+        // 启动SurfaceActivity，同时隐藏当前 Activity 到后台
+        Intent intent = new Intent(this, SurfaceActivity.class);
+        startActivity(intent);
+        Log.i(TAG, "startOpenGlActivity");
+        finish();
     }
 
     private void testNative() {
@@ -121,9 +145,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         dog.setAge(dog.getAge() + 3);
     }
 
-    private boolean TestThread = true;
+    private static final boolean TEST_THREAD = true;
     private void btn1Fun() {
-        if (TestThread) {
+        if (TEST_THREAD) {
             ThreadProcessor threadProcessor = new ThreadProcessor();
             for (int i = 1; i < 4; i++) {
                 threadProcessor.runThread(i);

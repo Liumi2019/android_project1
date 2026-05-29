@@ -4,5 +4,6 @@
     <string name="btnTest2">按钮2</string>
     <string name="btn_aar_service">aarService</string>
     <string name="btnGLTest">OpenGL测试</string>
+    <string name="btnGLActivity">OpenGL界面</string>
     <string name="mockTestName">"testMock"</string>
 </resources>

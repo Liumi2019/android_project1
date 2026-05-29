@@ -16,6 +16,10 @@ public class UserAARServer {
    }
 
     public void testAarService(Context context) {
+        if (context == null) {
+            Log.e(TAG, "testAarService: context is null");
+            return;
+        }
         Client client = new Client(context);
         client.startBinderService();
         Log.i(TAG, "startBinderService");

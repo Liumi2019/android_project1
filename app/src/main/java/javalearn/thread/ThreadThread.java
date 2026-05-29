@@ -32,7 +32,8 @@ public class ThreadThread extends Thread {
         try {
             Thread.sleep(mSleepTime);
         } catch (InterruptedException e) {
-            Log.w(TAG, "sleep exception thread name: " + Thread.currentThread().getName());
+            Log.w(TAG, "sleep interrupted, thread name: " + Thread.currentThread().getName());
+            Thread.currentThread().interrupt();
         }
         Log.w(TAG, "sleep " + mSleepTime + "ms");
     }

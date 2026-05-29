@@ -16,8 +16,10 @@ public class FristLib extends Service {
 
     private RemoteCallbackList<MyCallBack> callBacks = null;
 
+    private volatile boolean mRunning = true;
+
     private final Thread thread = new Thread(()->{
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 100 && mRunning; i++) {
             updateCallback(i);
             Log.i(TAG, "time:" + i * 100);
         }
@@ -37,6 +39,11 @@ public class FristLib extends Service {
     @Override
     public void onDestroy() {
         Log.e(TAG, "onDestroy");
+        mRunning = false;
+        if (callBacks != null) {
+            callBacks.kill();
+            callBacks = null;
+        }
         super.onDestroy();
     }
 
@@ -87,18 +94,17 @@ public class FristLib extends Service {
                 for (int j = 0; j < len; j++) {
                     callBacks.getBroadcastItem(j).getNum(time);
                 }
-            } catch (RemoteException ignore) {
-                Log.e(TAG, "callBacks error");
+            } catch (RemoteException e) {
+                Log.e(TAG, "callBacks error: " + e.getMessage());
+            } finally {
+                callBacks.finishBroadcast();
             }
         }
         try {
             Thread.sleep(100);
-        } catch (InterruptedException ignore) {
-            Log.w(TAG, "sleep error");
-        }
-
-        if (callBacks != null && len >0) {
-            callBacks.finishBroadcast();
+        } catch (InterruptedException e) {
+            Log.w(TAG, "sleep interrupted: " + e.getMessage());
+            Thread.currentThread().interrupt();
         }
     }
 

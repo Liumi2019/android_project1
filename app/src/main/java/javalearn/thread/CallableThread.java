@@ -16,15 +16,15 @@ public class CallableThread implements Callable<Long> {
     @Override
     public Long call() throws Exception {
         if (mSleepTime <= 0) {
-            // 主动抛异常，需要告知调用者必须处理异常
-            throw new RuntimeException();
+            throw new RuntimeException("CallableThread: invalid sleep time " + mSleepTime);
         }
 
         Log.i(TAG, "start sleep thread name: " + Thread.currentThread().getName());
         try {
             Thread.sleep(mSleepTime);
         } catch (InterruptedException e) {
-            Log.w(TAG, "sleep exception thread name: " + Thread.currentThread().getName());
+            Log.w(TAG, "sleep interrupted, thread name: " + Thread.currentThread().getName());
+            Thread.currentThread().interrupt();
         }
         Log.w(TAG, "sleep " + mSleepTime + "ms");
 

@@ -15,11 +15,19 @@ project("app")
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 
-include_directories(include)
+include_directories(
+        include
+        include/egl
+        include/render
+        include/utils
+)
 
 file(GLOB_RECURSE SRC
         src/*.cpp
         src/jni/*.cpp
+        src/egl/*.cpp
+        src/render/*.cpp
+        src/utils/*.cpp
         )
 
 add_library( # Sets the name of the library.
@@ -54,4 +62,8 @@ target_link_libraries( # Specifies the target library.
 
                        # Links the target library to the log library
                        # included in the NDK.
-                       ${log-lib} )
+                       ${log-lib}
+                        EGL
+                        GLESv3
+                        android
+)

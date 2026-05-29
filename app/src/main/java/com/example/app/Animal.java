@@ -15,7 +15,7 @@ public abstract class Animal {
     private int mAge;
 
     public Animal() {
-        mName = null;
+        mName = "";
         mAge = 0;
     }
 

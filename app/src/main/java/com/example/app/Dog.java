@@ -50,14 +50,14 @@ public class Dog extends Animal {
         thread2.start();
         try {
             thread2.join();
-        } catch (Exception ignore) {
-            Log.e(TAG, "thread2 join running error");
+        } catch (Exception e) {
+            Log.e(TAG, "thread2 join error: " + e.getMessage());
         }
         thread1.start();
         try {
             thread1.join();
-        } catch (Exception ignore) {
-            Log.e(TAG, "thread2 join running error");
+        } catch (Exception e) {
+            Log.e(TAG, "thread1 join error: " + e.getMessage());
         }
         return 0;
     }

@@ -26,7 +26,10 @@ public class Client {
 
 
     public Client(Context context) {
-        this.context = context;
+        if (context == null) {
+            throw new IllegalArgumentException("Client: context must not be null");
+        }
+        this.context = context.getApplicationContext();
     }
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
@@ -70,8 +73,17 @@ public class Client {
     };
 
     public void startBinderService() {
-        Intent intent = new Intent(context.getApplicationContext(), FristLib.class);
+        Intent intent = new Intent(context, FristLib.class);
         boolean isBinder = context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
         Log.i(TAG, "is binder: " + isBinder);
+    }
+
+    public void unbindService() {
+        try {
+            context.unbindService(serviceConnection);
+            binderSer = null;
+        } catch (IllegalArgumentException e) {
+            Log.w(TAG, "unbindService failed: " + e.getMessage());
+        }
     }
 }
